@@ -1,3 +1,34 @@
+#1115 코드 (최종 코드)
+import discord
+from discord.ext import commands
+import os
+
+
+def main():
+    prefix = '!'
+    intents = discord.Intents.all()
+
+    client = commands.Bot(command_prefix=prefix, intents=intents)
+    
+    for filename in os.listdir('./cogs'):
+        if '.py' in filename:
+            filename = filename.replace('.py','')
+            client.load_extension(f'cogs.{filename}') # 모듈을 client(봇)에 추가. 반드시 함수는 setup
+            
+    with open('token.txt', 'r') as f:
+        token = f.read()
+    client.run(token)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+#1112 코드     
 # import discord
 # from discord.ext import commands
 # import os
@@ -60,28 +91,3 @@
 #     client.run(token)
 
 
-
-#1115 코드 
-import discord
-from discord.ext import commands
-import os
-
-
-def main():
-    prefix = '!'
-    intents = discord.Intents.all()
-
-    client = commands.Bot(command_prefix=prefix, intents=intents)
-    
-    for filename in os.listdir('./cogs'):
-        if '.py' in filename:
-            filename = filename.replace('.py','')
-            client.load_extension(f'cogs.{filename}') # 모듈을 client(봇)에 추가. 반드시 함수는 setup
-            
-    with open('token.txt', 'r') as f:
-        token = f.read()
-    client.run(token)
-
-
-if __name__ == '__main__':
-    main()
