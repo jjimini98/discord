@@ -9,7 +9,7 @@ class Submit_mogakco(commands.Cog):
     async def on_ready(self):
         print("submit_mogakco Cog is Ready")
         
-    @commands.command(name= "모각코과제제출")
+    @commands.command(name= "모각코과제")
     async def submit_mogakco(self,ctx,arg=None):
         if arg == None: 
             await ctx.send(f"==============================={datetime.now().date()}모각코 과제===============================")
