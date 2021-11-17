@@ -13,34 +13,37 @@ class Lunch(commands.Cog):
     async def on_ready(self):
         print("Homework Lunch Cog is Ready")
 
-    # @commands.command(name="점심메뉴골라줘")
-    # async def homework_lunch(self,ctx, *args):
-    #     if len(args) == 0: 
-    #         categories = list(self.lunchDict.keys()) #딕셔너리 key값만 해당 
-    #         category = random.choice(categories) # categories중에서 하나 선택 
-    #         lunch = random.choice(self.lunchDict[category]) #categories 중에서 또 하나 선택 
-    #         await ctx.send(f"오늘 점심은 {category} 그 중에서도 {lunch}가 어떠세요?")
-    #     else: 
-    #         categories = list(args)
-    #         category =  random.choice(categories)
-    #         lunch = random.choice(self.lunchDict[category])
-    #         # await ctx.send(f"오늘 점심은 {category} 그 중에서도 {lunch}가 어떠세요?")
-    #         await ctx.send(f"{categories[0]}이랑 {categories[1]}이면...{lunch} 어떠세요?")
-
     @commands.command(name="점심메뉴골라줘")
-    async def homework_lunch(self,ctx, arg1 = None, arg2 = None):
-        if arg1 == None and arg2 == None: 
+    async def homework_lunch(self,ctx, *args):
+        if len(args) == 0: 
             categories = list(self.lunchDict.keys()) #딕셔너리 key값만 해당 
             category = random.choice(categories) # categories중에서 하나 선택 
             lunch = random.choice(self.lunchDict[category]) #categories 중에서 또 하나 선택 
             await ctx.send(f"오늘 점심은 {category} 그 중에서도 {lunch}가 어떠세요?")
         else: 
-            categories = list()
-            categories.append(arg1)
-            categories.append(arg2)
+            categories = list(args)
             category =  random.choice(categories)
             lunch = random.choice(self.lunchDict[category])
-            await ctx.send(f"{arg1}이랑 {arg2}이면...{lunch} 어떠세요?")
+            # await ctx.send(f"오늘 점심은 {category} 그 중에서도 {lunch}가 어떠세요?")
+            await ctx.send(f"{categories[0]}이랑 {categories[1]}이면...{lunch} 어떠세요?")
+
+
+
+    # 1116 인자 2개만 받을 수 있는 코드 
+    # @commands.command(name="점심메뉴골라줘")
+    # async def homework_lunch(self,ctx, arg1 = None, arg2 = None):
+    #     if arg1 == None and arg2 == None: 
+    #         categories = list(self.lunchDict.keys()) #딕셔너리 key값만 해당 
+    #         category = random.choice(categories) # categories중에서 하나 선택 
+    #         lunch = random.choice(self.lunchDict[category]) #categories 중에서 또 하나 선택 
+    #         await ctx.send(f"오늘 점심은 {category} 그 중에서도 {lunch}가 어떠세요?")
+    #     else: 
+    #         categories = list()
+    #         categories.append(arg1)
+    #         categories.append(arg2)
+    #         category =  random.choice(categories)
+    #         lunch = random.choice(self.lunchDict[category])
+    #         await ctx.send(f"{arg1}이랑 {arg2}이면...{lunch} 어떠세요?")
 
 def setup(client):
     client.add_cog(Lunch(client))
