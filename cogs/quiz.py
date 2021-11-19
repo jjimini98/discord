@@ -1,5 +1,4 @@
 import discord
-from discord import embeds
 from discord.ext import commands
 import csv
 import random 
@@ -58,18 +57,40 @@ class Quiz(commands.Cog):
 
 
     @commands.command(name="퀴즈랭킹")
-    async def ranking_quiz(self,ctx):
-        embed = discord.Embed(title = '전체 퀴즈 랭킹', description = "전체 퀴즈 랭킹입니다. \n 한 문제 맞출 때마다 1점이 증가해요! ", color = discord.Color.blue())
+    async def ranking_quiz(self,ctx,arg1 = None, arg2 = None):
         with open("C:/Users/Jimin/PycharmProjects/discord/cogs/data/score.json","r", encoding= 'utf-8') as s:
             data = json.load(s)
-    
-        sdict = sorted(dict.items(data)) #점수를 내림차순으로 정렬 
-        idx = 1
-        for name,score in sdict: 
-            mod_name = str(idx)+"."+name
-            embed.add_field(name=mod_name,value=score,inline=False)
-            idx += 1
-        await ctx.send(embed=embed)
+        # sdict = sorted(dict.items(data)) #점수를 내림차순으로 정렬 
+        sdict = sorted(list(data.items()), key=lambda x:x[1], reverse=True)
+        if arg1 ==None and arg2 == None: 
+            embed = discord.Embed(title = '전체 퀴즈 랭킹', description = "전체 퀴즈 랭킹입니다. \n 한 문제 맞출 때마다 1점이 증가해요! ", color = discord.Color.blue())
+            idx = 1
+            for name,score in sdict: 
+                mod_name = str(idx)+"."+name
+                embed.add_field(name=mod_name,value=score,inline=False)
+                idx += 1
+            await ctx.send(embed=embed)
+        
+        elif arg1 !=None and arg2 == None: 
+            embed = discord.Embed(title = '개인 퀴즈 랭킹', description = "개인 퀴즈 랭킹입니다.", color = discord.Color.gold())
+            personal_score = data.get(arg1)
+            for x in sdict: 
+                if arg1 in x : 
+                    rank = sdict.index(x) +1 
+                    text = f"{arg1}님은 {personal_score}점으로 {rank}등입니다."
+                    embed.add_field(name=arg1,value=text,inline=False)
+                    await ctx.send(embed=embed)
+        
+        elif arg1 !=None and arg2 != None: #매니저 곰 같은 경우 
+            embed = discord.Embed(title = '개인 퀴즈 랭킹', description = "개인 퀴즈 랭킹입니다.", color = discord.Color.gold())
+            args = arg1 +" "+ arg2
+            personal_score = data.get(args)
+            for x in sdict: 
+                if args in x : 
+                    rank = sdict.index(x) +1 
+                    text = f"{args}님은 {personal_score}점으로 {rank}등입니다."
+                    embed.add_field(name=args,value=text,inline=False)
+                    await ctx.send(embed=embed)
 
 
     @commands.command(name="퀴즈종료")
@@ -78,3 +99,6 @@ class Quiz(commands.Cog):
 
 def setup(client):
     client.add_cog(Quiz(client))
+
+
+
