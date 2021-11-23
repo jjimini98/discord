@@ -1,3 +1,4 @@
 token.txt
 cogs/__pycache__
 .idea/
+cogs/module/__pycache__
