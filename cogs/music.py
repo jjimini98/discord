@@ -1,8 +1,8 @@
 import discord
 from discord import embeds
 from discord.ext import commands
-from youtube_dl import YoutubeDL
-
+from youtube_dl import YoutubeDL    
+from .module.youtube import getUrl
 class Music(commands.Cog):
     def __init__(self, client):
         option = {
@@ -17,8 +17,11 @@ class Music(commands.Cog):
         print("Music Cog is Ready")
 
     @commands.command(name ="음악재생")
-    async def play_music(self, ctx, url):
-        url = url= url[1:len(url)]
+    async def play_music(self, ctx, *keywords):
+        keyword = ' '.join(keywords)
+        url = getUrl(keyword)
+        if "<" in url  and ">" in url: 
+            url = url[1:len(url)]
         #봇의 음성 채널 연결이 없으면
         if ctx.voice_client is None: 
             # 명령어(ctx) 작성자(author)의 음성 채널에 연결 상태(voice)
@@ -47,16 +50,42 @@ class Music(commands.Cog):
             'options': '-vn',
             "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
         }
-        player = discord.FFmpegPCMAudio(link, **ffmpeg_options, executable = "C:/ffmpeg/bin/ffmpeg")
+        player = discord.FFmpegPCMAudio(link, **ffmpeg_options, executable = "D:/ffmpeg/bin/ffmpeg")
         ctx.voice_client.play(player)
         
-        embed = discord.Embed(title = '음악 재생', description = f'{title} 재생을 시작힐게요!' , color = discord.Color.blue())
+        embed = discord.Embed(title = '음악 재생', description = f'{title} 재생을 시작할게요!' , color = discord.Color.blue())
         await ctx.send(embed=embed)
+
+    @commands.command(name ="음악종료")
+    async def quit_music(self, ctx):
+        voice = ctx.voice_client
+        if voice.is_connected():
+            await voice.disconnect()
+            embed = discord.Embed(title = '', description = '음악 재생을 종료합니다.' , color = discord.Color.blue())
+            await ctx.send(embed=embed)
+    
+    @commands.command(name ="일시정지")
+    async def pause_music(self, ctx):
+        voice = ctx.voice_client
+        if voice.is_connected():
+            voice.pause() #리턴값이 없으므로 await 는 안붙음 
+            embed = discord.Embed(title = '', description = '음악 재생을 일시정지합니다' , color = discord.Color.blue())
+            await ctx.send(embed=embed)
+    
+    @commands.command(name ="재시작")
+    async def restart_music(self, ctx):
+        voice = ctx.voice_client
+        if voice.is_connected():
+            voice.resume()#리턴값이 없으므로 await 는 안붙음  
+            embed = discord.Embed(title = '', description = '멈춘 부분부터 음악을 재생합니다' , color = discord.Color.blue())
+            await ctx.send(embed=embed)
+
 
     @commands.command(name ="유튜브")
     async def youtube_info(self, ctx, url):
         #내가 입력한 채팅에서는 임베드 안보이게 설정 
-        url= url[1:len(url)] # 앞뒤 <> 제거 
+        if "<" in url  and ">" in url: 
+            url= url[1:len(url)] # 앞뒤 <> 제거 
         data = self.DL.extract_info(url, download = False)
         embed = discord.Embed(title = data['title'], url = url )
         embed.set_author(name = data['uploader'])
