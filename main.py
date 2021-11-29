@@ -8,7 +8,7 @@ def main():
     prefix = '!'
     intents = discord.Intents.all()
 
-    client = commands.Bot(command_prefix=prefix, intents=intents)
+    client = commands.Bot(command_prefix=prefix, intents=intents, help_command=None)
     
     for filename in os.listdir('./cogs'):
         if '.py' in filename:
