@@ -15,6 +15,50 @@ def main():
             filename = filename.replace('.py','')
             client.load_extension(f'cogs.{filename}') # 모듈을 client(봇)에 추가. 반드시 함수는 setup
             
+
+
+    @client.event
+    async def on_message(message):  
+        if message.author.bot:
+            pass
+        else:
+            name = message.author.name
+            channel = message.channel
+            await channel.send(f"{name}님이 보내신 메세지를 확인했어요!")
+
+            await client.process_commands(message)
+
+
+    @client.event
+    async def on_member_join(member):
+        if member.dm_channel:
+            channel = member.dm_channel
+        else:
+            channel = await member.create_dm()
+        name = member.name
+        await channel.send(f"{name}님, 안녕하세요! 알싸한 파이썬 서버에 오신걸 환영합니다.")
+
+    @client.command(name = "추가")
+    async def _load(ctx, extension):
+        client.load_extension(f'cogs.{extension}')
+        await ctx.send(f"{extension}이 추가 되었어요!")
+
+    @client.command(name = "제거")
+    async def _unload(ctx, extension):
+        client.unload_extension(f"cogs.{extension}")
+        await ctx.send(f"{extension}이 제거 되었어요!")
+
+    @client.command(name = "새로고침")
+    async def _reload(ctx, extension):
+        client.unload_extension(f"cogs.{extension}")
+        client.load_extension(f'cogs.{extension}')
+        await ctx.send(f"{extension}이 새로고침 되었어요!")
+
+
+
+
+
+
     with open('token.txt', 'r') as f:
         token = f.read()
     client.run(token)
