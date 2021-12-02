@@ -3,3 +3,4 @@ cogs/__pycache__
 .idea/
 cogs/module/__pycache__
 tech_interview/
+cogs/data
